@@ -1,44 +1,46 @@
-let squares = document.querySelectorAll(".square");
-let index = 0;
-let correctWord = "farts";
+let squares = Array.from(document.querySelectorAll(".square"));
+let mainIndex = 0;
+const correctWord = "farts";
 let charArr = [];
-
-// console.log(fard);
-
-// fard.background = "var(--correct)";
-// fard.border = "none";
-// fard.color = "white";
+let gameOver = false;
+let checkCount = 0;
 
 if (correctWord.length !== 5) {
     alert("Invalid word! Make sure it is 5 letters long.");
 }
 
 window.addEventListener("keydown", (event) => {
-    //console.log(event.key);
-
-    if (event.key.length === 1 && /^[a-zA-Z]+$/.test(event.key) && index < 5) {
-        squares[index].textContent = event.key;
-        charArr.push(event.key);
-        changeSquare(index, "typing");
-        index++;
-    } else if (event.key === "Backspace" && index > 0) {
-        index--;
-        squares[index].textContent = "";
-        charArr.pop();
-        changeSquare(index);
-    } else if (event.key === "Enter" && index === 5) {
-        check(charArr, correctWord);
+    if (!gameOver) {
+        if (event.key.length === 1 && /^[a-zA-Z]+$/.test(event.key) && mainIndex < 5) {
+            squares[mainIndex].textContent = event.key;
+            charArr.push(event.key);
+            changeSquare(mainIndex, "typing");
+            mainIndex++;
+        } else if (event.key === "Backspace" && mainIndex > 0) {
+            mainIndex--;
+            squares[mainIndex].textContent = "";
+            charArr.pop();
+            changeSquare(mainIndex);
+        } else if (event.key === "Enter" && mainIndex === 5) {
+            check(charArr, correctWord);
+            for (var i = 0; i < 5; i++) {
+                squares.shift();
+            }
+            charArr = [];
+            mainIndex = 0;
+        }
     }
-
 })
 
 function check(arr, word) {
 
     if (arr.join("") === word) {
+        gameOver = true;
         console.log("you got the word!");
         for (var i = 0; i < 5; i++) {
             changeSquare(i, "correct");
         }
+
     } else {
         for (var i = 0; i < arr.length; i++) {
             if (word.includes(arr[i])) {
@@ -55,6 +57,12 @@ function check(arr, word) {
             }
         }
     }
+
+    if(checkCount === 6) {
+        gameOver = true;
+    }
+
+    checkCount++;
 }
 
 function changeSquare(index, state) {
