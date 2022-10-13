@@ -10,6 +10,9 @@ if (correctWord.length !== 5) {
 }
 
 window.addEventListener("keydown", (event) => {
+
+    console.log(getWord());
+
     if (!gameOver) {
         if (event.key.length === 1 && /^[a-zA-Z]+$/.test(event.key) && mainIndex < 5) {
             squares[mainIndex].textContent = event.key;
