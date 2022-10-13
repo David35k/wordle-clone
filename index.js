@@ -30,7 +30,7 @@ window.addEventListener("keydown", (event) => {
             mainIndex = 0;
         }
     }
-})
+});
 
 function check(arr, word) {
 
