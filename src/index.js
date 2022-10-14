@@ -1,39 +1,53 @@
-let squares = Array.from(document.querySelectorAll(".square"));
 let mainIndex = 0;
-let correctWord = "";
 let charArr = [];
-let gameOver = false;
+let pause = false;
 let checkCount = 0;
+let correctWord = "";
+let streak = 0;
 
 const wordDisplay = document.querySelector("#wordDisplay");
+const restartButton = document.querySelector("#restart");
+let squares = Array.from(document.querySelectorAll(".square"));
 
+function getWord() {
+    fetch("http://127.0.0.1:8000/word")
+        .then(respone => respone.json())
+        .then(data => {
+            console.log(data);
+            correctWord = data;
+        })
+}
 
-fetch("http://localhost:8000/word")
-    .then(respone => respone.json())
-    .then(data => {
-        
-        correctWord = data.replace(/"/g, '');
-        // console.log(correctWord);
-    })
+getWord();
 
 window.addEventListener("keydown", (event) => {
-
-    if (!gameOver) {
+    if (!pause) {
         if (event.key.length === 1 && /^[a-zA-Z]+$/.test(event.key) && mainIndex < 5) {
             squares[mainIndex].textContent = event.key;
+            squares[mainIndex].classList.add("bounceAnim");
             charArr.push(event.key);
             changeSquare(mainIndex, "typing");
             mainIndex++;
         } else if (event.key === "Backspace" && mainIndex > 0) {
             mainIndex--;
             squares[mainIndex].textContent = "";
+            squares[mainIndex].classList.remove("bounceAnim");
             charArr.pop();
             changeSquare(mainIndex);
         } else if (event.key === "Enter" && mainIndex === 5) {
             check(charArr, correctWord);
             for (var i = 0; i < 5; i++) {
-                squares.shift();
+                squares[i].classList.add("checkAnim");
+                // squares[i].classList.add("f".repeat(i + 1));
             }
+            pause = true;
+            setTimeout(() => {
+                for (var i = 0; i < 5; i++) {
+                    squares.shift();
+                }
+                pause = false;
+            }, 250);
+
             charArr = [];
             mainIndex = 0;
         }
@@ -41,36 +55,46 @@ window.addEventListener("keydown", (event) => {
 });
 
 function check(arr, word) {
+    setTimeout(() => {
 
-    if (arr.join("") === word) {
-        gameOver = true;
-        console.log("you got the word!");
-        for (var i = 0; i < 5; i++) {
-            changeSquare(i, "correct");
-        }
 
-    } else {
-        for (var i = 0; i < arr.length; i++) {
-            if (word.includes(arr[i])) {
-                if (arr[i] === Array.from(word)[i]) {
-                    console.log(arr[i] + " is in the correct word and in the correct spot");
-                    changeSquare(i, "correct");
+        if (arr.join("") === word) {
+            pause = true;
+            console.log("you got the word!");
+            for (var i = 0; i < 5; i++) {
+                changeSquare(i, "correct");
+            }
+            streak++;
+            wordDisplay.innerHTML = "Nice! You got the correct word.";
+            wordDisplay.style.color = "orange";
+            restartButton.style.visibility = "visible";
+
+        } else {
+            for (var i = 0; i < arr.length; i++) {
+                if (word.includes(arr[i])) {
+                    if (arr[i] === Array.from(word)[i]) {
+                        console.log(arr[i] + " is in the correct word and in the correct spot");
+                        changeSquare(i, "correct");
+                    } else {
+                        console.log("The correct word contains " + arr[i]);
+                        changeSquare(i, "contains");
+                    }
                 } else {
-                    console.log("The correct word contains " + arr[i]);
-                    changeSquare(i, "contains");
+                    console.log("The correct answer does not contain " + arr[i]);
+                    changeSquare(i, "wrong");
                 }
-            } else {
-                console.log("The correct answer does not contain " + arr[i]);
-                changeSquare(i, "wrong");
             }
         }
-    }
-
-    if(checkCount === 6) {
-        gameOver = true;
-    }
+    }, 250);
 
     checkCount++;
+
+    if (checkCount === 6 && !pause) {
+        pause = true;
+        wordDisplay.innerHTML = "Wrong! The correct word was: " + "<strong>" + correctWord + "</strong>";
+        wordDisplay.style.color = "var(--wrong)";
+        restartButton.style.visibility = "visible";
+    }
 }
 
 function changeSquare(index, state) {
@@ -101,4 +125,22 @@ function changeSquare(index, state) {
             squares[index].style.color = "black";
             break;
     }
+}
+
+function restart() {
+    getWord();
+    squares = Array.from(document.querySelectorAll(".square"));
+    for (var i = 0; i < squares.length; i++) {
+        changeSquare(i);
+        squares[i].innerHTML = "";
+        squares[i].classList.remove("checkAnim");
+        squares[i].classList.remove("bounceAnim");
+    }
+    checkCount = 0;
+    mainIndex = 0;
+    charArr = [];
+    wordDisplay.innerHTML = "";
+    restartButton.style.visibility = "hidden";
+    document.querySelector("#streakText").innerHTML = streak;
+    pause = false;
 }

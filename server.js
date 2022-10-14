@@ -1,13 +1,13 @@
 const PORT = 8000;
+const hostname = "127.0.0.1"
 const express = require("express");
 const app = express();
 const cors = require("cors");
 app.use(cors());
-
 const fs = require('fs');
 
 function getWord() {
-    var wordList = fs.readFileSync("valid-wordle-words.txt", "utf8");
+    var wordList = fs.readFileSync("word-files/wordle-words.txt", "utf8");
 
     var wordArr = wordList.split("\n");
 
@@ -20,4 +20,4 @@ app.get("/word", (req, res) => {
     res.json(getWord());
 });
 
-app.listen(PORT, () => console.log("Server running on port: " + PORT));
+app.listen(PORT, hostname, () => console.log("Server running at: " + hostname + ":" + PORT));
