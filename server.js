@@ -20,4 +20,8 @@ app.get("/word", (req, res) => {
     res.json(getWord());
 });
 
+app.get("/", (req, res) => {
+    res.json("hi");
+});
+
 app.listen(process.env.PORT || PORT, () => console.log("Server running at: " + hostname + ":" + PORT));
