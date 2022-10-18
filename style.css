@@ -126,8 +126,13 @@ h1 {
     color: black;
     background-color: var(--key);
     margin: 3px;
+    text-transform: uppercase;
 }
 
 .key.enter {
+    width: 70px;
+}
+
+.key.back {
     width: 70px;
 }

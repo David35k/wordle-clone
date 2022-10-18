@@ -7,6 +7,8 @@ let streak = 0;
 
 const wordDisplay = document.querySelector("#wordDisplay");
 const restartButton = document.querySelector("#restart");
+const keys = document.querySelectorAll(".key");
+
 let squares = Array.from(document.querySelectorAll(".square"));
 
 function getWord() {
@@ -21,7 +23,7 @@ function getWord() {
 getWord();
 
 window.addEventListener("keydown", (event) => {
-    if (!pause && !correctWord == "") {
+    if (!pause && correctWord !== "") {
         if (event.key.length === 1 && /^[a-zA-Z]+$/.test(event.key) && mainIndex < 5) {
             squares[mainIndex].textContent = event.key;
             squares[mainIndex].classList.add("bounceAnim");
@@ -38,7 +40,6 @@ window.addEventListener("keydown", (event) => {
             check(charArr, correctWord);
             for (var i = 0; i < 5; i++) {
                 squares[i].classList.add("checkAnim");
-                // squares[i].classList.add("f".repeat(i + 1));
             }
             pause = true;
             setTimeout(() => {
@@ -47,7 +48,6 @@ window.addEventListener("keydown", (event) => {
                 }
                 pause = false;
             }, 250);
-
             charArr = [];
             mainIndex = 0;
         }
@@ -56,8 +56,6 @@ window.addEventListener("keydown", (event) => {
 
 function check(arr, word) {
     setTimeout(() => {
-
-
         if (arr.join("") === word) {
             pause = true;
             console.log("you got the word!");
@@ -144,3 +142,24 @@ function restart() {
     document.querySelector("#streakText").innerHTML = streak;
     pause = false;
 }
+
+
+keys.forEach(k => {
+    k.addEventListener("click", (event) => {
+        if (correctWord !== "") {
+            let html = k.innerHTML;
+            let str = html.replace(/ /g, "")
+            console.log(str);
+
+            if (str == "back") {
+                window.dispatchEvent(new KeyboardEvent("keydown", {
+                    "key": "Backspace"
+                }))
+            } else {
+                window.dispatchEvent(new KeyboardEvent("keydown", {
+                    "key": str
+                }))
+            }
+        }
+    })
+})
