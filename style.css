@@ -10,6 +10,7 @@
     justify-content: center;
     flex-direction: column;
     text-align: center;
+    height: 100vh;
 }
 
 .game {
@@ -27,12 +28,11 @@
     font-weight: bold;
     color: black;
     margin: 3px;
-    width: 60px;
-    height: 60px;
+    width: 3.75rem;
+    height: 3.75rem;
     background: white;
     border: solid grey 2px;
     text-transform: uppercase;
-    perspective: 1000px;
     transition: transform 500ms;
 }
 
@@ -85,7 +85,7 @@
     visibility: hidden;
     border: none;
     font-size: 25px;
-    margin: 10px;
+    margin: 0.625rem;
     margin-top: 50px;
     padding: 10px;
     background: orange;
@@ -103,12 +103,8 @@
     color: orange;
 }
 
-h1 {
-    font-size: 50px;
-}
-
-.board {
-    width: 310px;
+html {
+    font-size: 1.5vh;
 }
 
 .keyboard {
@@ -118,9 +114,10 @@ h1 {
 }
 
 .key {
-    width: 40px;
-    height: 60px;
+    width: 2.5rem;
+    height: 3.75rem;
     text-align: center;
+    font-size: 1.5bvh;
     border: none;
     border-radius: 3px;
     color: black;
@@ -130,9 +127,9 @@ h1 {
 }
 
 .key.enter {
-    width: 70px;
+    width: 4.375rem;
 }
 
 .key.back {
-    width: 70px;
+    width: 4.375rem;
 }
