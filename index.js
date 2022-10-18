@@ -21,7 +21,7 @@ function getWord() {
 getWord();
 
 window.addEventListener("keydown", (event) => {
-    if (!pause) {
+    if (!pause && !correctWord == "") {
         if (event.key.length === 1 && /^[a-zA-Z]+$/.test(event.key) && mainIndex < 5) {
             squares[mainIndex].textContent = event.key;
             squares[mainIndex].classList.add("bounceAnim");

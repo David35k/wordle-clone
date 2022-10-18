@@ -2,6 +2,7 @@
     --wrong: #787C7E;
     --in-word: #C9B458;
     --correct: #6AAA64;
+    --key: #d3d6da;
 }
 
 .main {
@@ -13,6 +14,8 @@
 
 .game {
     display: flex;
+    align-items: center;
+    flex-direction: column;
     justify-content: center;
 }
 
@@ -98,4 +101,33 @@
 
 .orange {
     color: orange;
+}
+
+h1 {
+    font-size: 50px;
+}
+
+.board {
+    width: 310px;
+}
+
+.keyboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.key {
+    width: 40px;
+    height: 60px;
+    text-align: center;
+    border: none;
+    border-radius: 3px;
+    color: black;
+    background-color: var(--key);
+    margin: 3px;
+}
+
+.key.enter {
+    width: 70px;
 }
