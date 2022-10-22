@@ -7,6 +7,7 @@ let streak = 0;
 
 const wordDisplay = document.querySelector("#wordDisplay");
 const restartButton = document.querySelector("#restart");
+
 const keys = document.querySelectorAll(".key");
 
 let squares = Array.from(document.querySelectorAll(".square"));
@@ -21,6 +22,7 @@ function getWord() {
 }
 
 getWord();
+changeKeys("all");
 
 window.addEventListener("keydown", (event) => {
     if (!pause && correctWord !== "") {
@@ -58,7 +60,6 @@ function check(arr, word) {
     setTimeout(() => {
         if (arr.join("") === word) {
             pause = true;
-            console.log("you got the word!");
             for (var i = 0; i < 5; i++) {
                 changeSquare(i, "correct");
             }
@@ -71,15 +72,15 @@ function check(arr, word) {
             for (var i = 0; i < arr.length; i++) {
                 if (word.includes(arr[i])) {
                     if (arr[i] === Array.from(word)[i]) {
-                        console.log(arr[i] + " is in the correct word and in the correct spot");
                         changeSquare(i, "correct");
+                        changeKeys(arr[i], "correct");
                     } else {
-                        console.log("The correct word contains " + arr[i]);
                         changeSquare(i, "contains");
+                        changeKeys(arr[i], "contains");
                     }
                 } else {
-                    console.log("The correct answer does not contain " + arr[i]);
                     changeSquare(i, "wrong");
+                    changeKeys(arr[i], "wrong");
                 }
             }
         }
@@ -135,6 +136,7 @@ function restart() {
         squares[i].classList.remove("checkAnim");
         squares[i].classList.remove("bounceAnim");
     }
+    changeKeys("all");
     checkCount = 0;
     mainIndex = 0;
     charArr = [];
@@ -164,3 +166,40 @@ keys.forEach(k => {
         }
     })
 })
+
+function changeKeys(letter, state) {
+
+    if (letter === "all") {
+        for (var i = 0; i < keys.length; i++) {
+            keys[i].style.background = "var(--key)";
+            keys[i].style.color = "black";
+        }
+    }
+
+    for (var i = 0; i < keys.length; i++) {
+        if (keys[i].innerHTML === letter) {
+            switch (state) {
+                case "correct":
+                    if (keys[i].style.background == "var(--key)" || keys[i].style.background == "var(--in-word)") {
+                        keys[i].style.background = "var(--correct)";
+                        keys[i].style.color = "white";
+                    }
+                    break;
+                case "contains":
+                    if (keys[i].style.background == "var(--key)") {
+                        keys[i].style.background = "var(--in-word)";
+                        keys[i].style.color = "white";
+                    }
+                    break;
+                case "wrong":
+                    keys[i].style.background = "var(--wrong)";
+                    keys[i].style.color = "white";
+                    break;
+                default:
+                    keys[i].style.background = "var(--key)";
+                    keys[i].style.color = "black";
+                    break;
+            }
+        }
+    }
+}
