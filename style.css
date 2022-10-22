@@ -136,4 +136,14 @@
 
 .disable-dbl-tap-zoom {
     touch-action: manipulation;
-  }
+}
+
+.timer {
+    font-size: 2rem;
+    padding: 5px;
+}
+
+.nav {
+    background-color: orange;
+    color: white;
+}

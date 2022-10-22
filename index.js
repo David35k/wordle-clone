@@ -12,6 +12,10 @@ const keys = document.querySelectorAll(".key");
 
 let squares = Array.from(document.querySelectorAll(".square"));
 
+//Length of game in seconds
+let timer = 180;
+const timeText = document.querySelector(".timer");
+
 function getWord() {
     fetch("https://speedword.herokuapp.com/word")
         .then(respone => respone.json())
@@ -48,7 +52,6 @@ window.addEventListener("keydown", (event) => {
                 for (var i = 0; i < 5; i++) {
                     squares.shift();
                 }
-                pause = false;
             }, 250);
             charArr = [];
             mainIndex = 0;
@@ -57,17 +60,20 @@ window.addEventListener("keydown", (event) => {
 });
 
 function check(arr, word) {
+
+    if (arr.join("") === word) {
+        pause = true;
+    }
+
     setTimeout(() => {
         if (arr.join("") === word) {
-            pause = true;
             for (var i = 0; i < 5; i++) {
                 changeSquare(i, "correct");
             }
             streak++;
-            wordDisplay.innerHTML = "Nice! You got the correct word.";
             wordDisplay.style.color = "orange";
+            wordDisplay.innerHTML = "Nice! You got the correct word.";
             restartButton.style.visibility = "visible";
-
         } else {
             for (var i = 0; i < arr.length; i++) {
                 if (word.includes(arr[i])) {
@@ -83,6 +89,7 @@ function check(arr, word) {
                     changeKeys(arr[i], "wrong");
                 }
             }
+            pause = false;
         }
     }, 250);
 
@@ -90,8 +97,8 @@ function check(arr, word) {
 
     if (checkCount === 6 && !pause) {
         pause = true;
-        wordDisplay.innerHTML = "Wrong! The correct word was: " + "<strong>" + correctWord + "</strong>";
         wordDisplay.style.color = "var(--wrong)";
+        wordDisplay.innerHTML = "Wrong! The correct word was: " + "<strong>" + correctWord + "</strong>";
         restartButton.style.visibility = "visible";
         streak = 0;
     }
@@ -143,6 +150,18 @@ function restart() {
     wordDisplay.innerHTML = "";
     restartButton.style.visibility = "hidden";
     document.querySelector("#streakText").innerHTML = streak;
+    if (streak <= 1) {
+        timer = 180;
+    } else if (streak > 1 && streak < 4) {
+        timer = 120;
+    } else if (streak > 3 && streak < 6) {
+        timer = 60;
+    } else {
+        timer = 30;
+    }
+    timerId = setTimeout(decreaseTimer, 100);
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; //For literally every other browser bruh
     pause = false;
 }
 
@@ -152,7 +171,6 @@ keys.forEach(k => {
         if (correctWord !== "") {
             let html = k.innerHTML;
             let str = html.replace(/ /g, "")
-            console.log(str);
 
             if (str == "back") {
                 window.dispatchEvent(new KeyboardEvent("keydown", {
@@ -203,3 +221,32 @@ function changeKeys(letter, state) {
         }
     }
 }
+
+//Changing the timer
+let timerId;
+function decreaseTimer() {
+
+    if (correctWord == "") {
+        timerId = setTimeout(decreaseTimer, 100);
+        return;
+    }
+
+    if (!pause) {
+        if (timer > 0) {
+            timerId = setTimeout(decreaseTimer, 1000);
+            timer--;
+            timeText.innerHTML = timer;
+        }
+
+        //End game based on time
+        if (timer === 0) {
+            pause = true;
+            wordDisplay.style.color = "var(--wrong)";
+            wordDisplay.innerHTML = "You ran out of time! The correct word was: " + "<strong>" + correctWord + "</strong>";
+            restartButton.style.visibility = "visible";
+            streak = 0;
+        }
+    }
+}
+
+decreaseTimer();
