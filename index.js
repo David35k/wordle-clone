@@ -246,6 +246,9 @@ function decreaseTimer() {
             restartButton.style.visibility = "visible";
             streak = 0;
         }
+        
+    } else {
+        timerId = setTimeout(decreaseTimer, 250);
     }
 }
 
