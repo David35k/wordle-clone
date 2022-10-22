@@ -92,6 +92,7 @@ function check(arr, word) {
         wordDisplay.innerHTML = "Wrong! The correct word was: " + "<strong>" + correctWord + "</strong>";
         wordDisplay.style.color = "var(--wrong)";
         restartButton.style.visibility = "visible";
+        streak = 0;
     }
 }
 
