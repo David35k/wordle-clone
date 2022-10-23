@@ -151,15 +151,15 @@ function restart() {
     restartButton.style.visibility = "hidden";
     document.querySelector("#streakText").innerHTML = streak;
     if (streak <= 1) {
-        timer = 180;
-    } else if (streak > 1 && streak < 4) {
         timer = 120;
-    } else if (streak > 3 && streak < 6) {
+    } else if (streak > 1 && streak < 4) {
         timer = 60;
-    } else {
+    } else if (streak > 3 && streak < 6) {
         timer = 30;
+    } else if (streak > 5) {
+        timer = 15;
     }
-    timerId = setTimeout(decreaseTimer, 100);
+
     document.body.scrollTop = 0; // For Safari
     document.documentElement.scrollTop = 0; //For literally every other browser bruh
     pause = false;
@@ -198,13 +198,13 @@ function changeKeys(letter, state) {
         if (keys[i].innerHTML === letter) {
             switch (state) {
                 case "correct":
-                    if (keys[i].style.background == "var(--key)" || keys[i].style.background == "var(--in-word)") {
+                    if (keys[i].style.background != "var(--correct)") {
                         keys[i].style.background = "var(--correct)";
                         keys[i].style.color = "white";
                     }
                     break;
                 case "contains":
-                    if (keys[i].style.background == "var(--key)") {
+                    if (keys[i].style.background != "var(--correct)") {
                         keys[i].style.background = "var(--in-word)";
                         keys[i].style.color = "white";
                     }
@@ -225,31 +225,21 @@ function changeKeys(letter, state) {
 //Changing the timer
 let timerId;
 function decreaseTimer() {
-
-    if (correctWord == "") {
-        timerId = setTimeout(decreaseTimer, 100);
-        return;
+    if (timer > 0) {
+        timer--;
+        timeText.innerHTML = timer;
     }
 
-    if (!pause) {
-        if (timer > 0) {
-            timerId = setTimeout(decreaseTimer, 1000);
-            timer--;
-            timeText.innerHTML = timer;
-        }
-
-        //End game based on time
-        if (timer === 0) {
-            pause = true;
-            wordDisplay.style.color = "var(--wrong)";
-            wordDisplay.innerHTML = "You ran out of time! The correct word was: " + "<strong>" + correctWord + "</strong>";
-            restartButton.style.visibility = "visible";
-            streak = 0;
-        }
-        
-    } else {
-        timerId = setTimeout(decreaseTimer, 250);
+    //End game based on time
+    if (timer === 0 && !pause) {
+        pause = true;
+        wordDisplay.style.color = "var(--wrong)";
+        wordDisplay.innerHTML = "You ran out of time! The correct word was: " + "<strong>" + correctWord + "</strong>";
+        restartButton.style.visibility = "visible";
+        streak = 0;
     }
+
+    timerId = setTimeout(decreaseTimer, 1000);
 }
 
 decreaseTimer();
