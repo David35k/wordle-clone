@@ -13,7 +13,7 @@ const keys = document.querySelectorAll(".key");
 let squares = Array.from(document.querySelectorAll(".square"));
 
 //Length of game in seconds
-let timer = 180;
+let timer = 120;
 const timeText = document.querySelector(".timer");
 
 function getWord() {
