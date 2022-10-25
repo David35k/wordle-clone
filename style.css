@@ -3,6 +3,7 @@
     --in-word: #C9B458;
     --correct: #6AAA64;
     --key: #d3d6da;
+    scroll-behavior: smooth;
 }
 
 .main {

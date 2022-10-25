@@ -160,8 +160,15 @@ function restart() {
         timer = 15;
     }
 
-    document.body.scrollTop = 0; // For Safari
-    document.documentElement.scrollTop = 0; //For literally every other browser bruh
+    // document.body.scrollTop = 0; // For Safari
+    // document.documentElement.scrollTop = 0; //For literally every other browser bruh
+
+    window.scroll({
+        top: 0,
+        left: 0,
+        behavior: "smooth"
+      });
+
     pause = false;
 }
 
